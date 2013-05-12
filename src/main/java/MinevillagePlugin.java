@@ -41,7 +41,6 @@ public class MinevillagePlugin extends JavaPlugin
      */
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        
         // get the player from the server.
         String playerName = sender.getName(); 
         Player player = this.getServer().getPlayerExact(playerName);
@@ -85,14 +84,14 @@ public class MinevillagePlugin extends JavaPlugin
         return true;
     }
     
-    private boolean checkWorld(Player player, Location loc)
+    private boolean checkWorld(Player player, Location loc, String cmd)
     {
         World world = loc.getWorld();
         
         if (world.getEnvironment() != World.Environment.NORMAL)
         {
             // um, there no villages in your weird world.
-            player.sendMessage(ChatColor.RED + "Please use the /village command in the Overworld.");
+            player.sendMessage(ChatColor.RED + "Please use the " + ChatColor.DARK_RED + "/" + cmd + ChatColor.RED + " command in the Overworld.");
             return false;
         }
         
@@ -103,7 +102,7 @@ public class MinevillagePlugin extends JavaPlugin
     {
         Location loc = player.getLocation();
         
-        if (this.checkWorld(player, loc))
+        if (this.checkWorld(player, loc, "village"))
         {
             // get the village at the given location.
             Object village = this.server.getVillage(
@@ -142,7 +141,7 @@ public class MinevillagePlugin extends JavaPlugin
     {
         Location loc = player.getLocation();
         
-        if (this.checkWorld(player, loc))
+        if (this.checkWorld(player, loc, "villagedoors"))
         {
             // get the village at the given location.
             Object village = this.server.getVillage(
