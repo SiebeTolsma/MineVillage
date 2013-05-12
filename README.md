@@ -1,22 +1,22 @@
-Minevillage is a simple plugin that uses Java reflection to extract information about
+MineVillage is a simple plugin that uses Java reflection to extract information about
 villages from a Minecraft/CraftBukkit server (as there is currently no API for this yet.)
 It lets users use /village to get information about the village they are in, as well as
 the ability to list all known doors in the village by using the /villagedoors command.
 
 ## Building
 
-To build Minevillage you'll need a Java compiler and Maven 2.2 or later. Perform
+To build MineVillage you'll need a Java compiler and Maven 2.2 or later. Perform
 the following:
 
-1. Clone the Mineplayers Git repository:
-   `git clone git://github.com/SiebeTolsma/Minevillage.git`
+1. Clone the Minepvillage Git repository:
+   `git clone git://github.com/SiebeTolsma/MineVillage.git`
 2. Run Maven to build:
    `mvn clean package`
 
 ## Developing
 
-Minevillage welcomes contributions in the form of pull requests and issue reports. 
-If you feel like working on Minevillage, just fork the repository and start working. 
+MineVillage welcomes contributions in the form of pull requests and issue reports. 
+If you feel like working on MineVillage, just fork the repository and start working. 
 Once you're done, submit a pull request.
 
 Note that only pulls that adhere to the current coding styles are accepted. In 
