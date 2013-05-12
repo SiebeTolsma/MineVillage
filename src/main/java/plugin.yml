@@ -1,0 +1,8 @@
+name: Minevillage
+main: net.bot2k3.siebe.Minevillage.MinevillagePlugin
+version: 0.1
+
+commands:
+  village:
+    description: Describes the village at your current location
+    usage: /village
