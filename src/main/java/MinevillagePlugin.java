@@ -52,14 +52,21 @@ public class MinevillagePlugin extends JavaPlugin
             
             if (name.equals("village")) 
             {
-                if (!this.server.isAvailable())
+                if (this.checkServerAvailable(player))
+                {
+                    this.handleVillageCommand(player);
+                }
+                
+                return true;
+            }
+            else if (name.equals("villagedoors"))
+            {
+                if (this.checkServerAvailable(player))
                 {
                     // there is no server available.
-                    player.sendMessage("Sorry, this command is not available at the moment.");
-                    return true;
+                    this.handleVillageDoorsCommand(player);
                 }
-        
-                this.handleVillageCommand(player);
+                
                 return true;
             }
         }
@@ -67,56 +74,107 @@ public class MinevillagePlugin extends JavaPlugin
         return false;
     }
     
-    private void handleVillageCommand(Player player)
+    private boolean checkServerAvailable(Player player)
     {
-        Location loc = player.getLocation();
+        if (!this.server.isAvailable())
+        {
+            player.sendMessage("Sorry, this command is not available at the moment.");
+            return false;
+        }
         
+        return true;
+    }
+    
+    private boolean checkWorld(Player player, Location loc)
+    {
         World world = loc.getWorld();
+        
         if (world.getEnvironment() != World.Environment.NORMAL)
         {
             // um, there no villages in your weird world.
             player.sendMessage(ChatColor.RED + "Please use the /village command in the Overworld.");
-            return;
+            return false;
         }
         
-        // get the village at the given location.
-        Object village = this.server.getVillage(
-            (int)loc.getX(),
-            (int)loc.getY(),
-            (int)loc.getZ());
+        return true;
+    }
+    
+    private void handleVillageCommand(Player player)
+    {
+        Location loc = player.getLocation();
         
-        if (village != null)
+        if (this.checkWorld(player, loc))
         {
-            // get the village information.
-            MinecraftVillage info = this.server.getVillageDetails(village, player.getName());
-            if (info != null)
+            // get the village at the given location.
+            Object village = this.server.getVillage(
+                (int)loc.getX(),
+                (int)loc.getY(),
+                (int)loc.getZ());
+            
+            if (village != null)
             {
-                String message = 
-                    ChatColor.YELLOW + "Found village! Here is the information:\n"  +
-                    ChatColor.GREEN + "    Location (Center): " + ChatColor.WHITE + "X=" + info.center.getX() + ", Y=" + info.center.getY() + ", Z=" + info.center.getZ() + "\n" +
-                    ChatColor.GREEN + "    Size (Radius): " + ChatColor.WHITE + info.size + "\n" +
-                    ChatColor.GREEN + "    Population: " + ChatColor.WHITE + info.population + "\n" +
-                    ChatColor.GREEN + "    Doors:\n";
-                
-                for (int i = 0; i < info.doors.length; i++)
+                // get the village information.
+                MinecraftVillage info = this.server.getVillageDetails(village, player.getName());
+                if (info != null)
                 {
-                    message += ChatColor.GREEN + "        " + i + ": " + ChatColor.WHITE;
-                    message += "X=" + info.doors[i].getX() + ", ";
-                    message += "Y=" + info.doors[i].getY() + ", ";
-                    message += "Z=" + info.doors[i].getZ() + "\n";
-                }
-                
-                message += ChatColor.GREEN + "    Standing/Popularity: " + ChatColor.WHITE + info.standing;
-                
-                // we're done building it, send it!
-                player.sendMessage(message);
+                    String message = 
+                        ChatColor.YELLOW + "Found village! Here is the information:\n"  +
+                        ChatColor.GREEN + "  Location (Center): " + ChatColor.GRAY + "X=" + ChatColor.WHITE + info.center.getX() + ChatColor.GRAY + ", Y=" + ChatColor.WHITE + info.center.getY() + ChatColor.GRAY + ", Z=" + ChatColor.WHITE + info.center.getZ() + "\n" +
+                        ChatColor.GREEN + "  Size (Radius): " + ChatColor.WHITE + info.size + "\n" +
+                        ChatColor.GREEN + "  Population: " + ChatColor.WHITE + info.population + "\n" +
+                        ChatColor.GREEN + "  Doors: " + ChatColor.WHITE + info.doors.length + ChatColor.YELLOW + " (Tip: " + ChatColor.AQUA + "/villagedoors" + ChatColor.YELLOW + ")\n" +
+                        ChatColor.GREEN + "  Standing/Popularity: " + ChatColor.WHITE + info.standing;
                     
-                return;
+                    // we're done building it, send it!
+                    player.sendMessage(message);
+                        
+                    return;
+                }
             }
+            
+            // nope, no village here!
+            player.sendMessage(ChatColor.AQUA + "You don't appear to be in or near a known village.");
         }
+    }
+    
+    
+    private void handleVillageDoorsCommand(Player player)
+    {
+        Location loc = player.getLocation();
         
-        // nope, no village here!
-        player.sendMessage(ChatColor.AQUA + "You don't appear to be in or near a known village.");
+        if (this.checkWorld(player, loc))
+        {
+            // get the village at the given location.
+            Object village = this.server.getVillage(
+                (int)loc.getX(),
+                (int)loc.getY(),
+                (int)loc.getZ());
+            
+            if (village != null)
+            {
+                // get the village information.
+                MinecraftVillage info = this.server.getVillageDetails(village, player.getName());
+                if (info != null)
+                {
+                    String message = ChatColor.YELLOW + "Found village! Here are the doors:\n";
+                       
+                    for (int i = 0; i < info.doors.length; i++)
+                    {
+                        message += ChatColor.GREEN + "  " + i + ": ";
+                        message += ChatColor.GRAY + "X=" + ChatColor.WHITE + info.doors[i].getX();
+                        message += ChatColor.GRAY + ", Y=" + ChatColor.WHITE + info.doors[i].getY();
+                        message += ChatColor.GRAY + ", Z=" + ChatColor.WHITE + info.doors[i].getZ() + "\n";
+                    }
+                    
+                    player.sendMessage(message);
+                        
+                    return;
+                }
+            }
+            
+            // nope, no village here!
+            player.sendMessage(ChatColor.AQUA + "You don't appear to be in or near a known village.");
+        }
     }
 }
 

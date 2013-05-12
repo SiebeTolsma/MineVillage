@@ -1,8 +1,11 @@
 name: Minevillage
 main: net.bot2k3.siebe.Minevillage.MinevillagePlugin
-version: 0.1
+version: 0.2
 
 commands:
   village:
     description: Describes the village at your current location
     usage: /village
+  villagedoors:
+    description: Lists all doors of the village at your current location
+    usage: /villagedoors
